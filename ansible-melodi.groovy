@@ -6,17 +6,15 @@ properties([
     ])
 if (nodeIP?.trim()) {
     node {
-        withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-master-ssh-key', keyFileVariable: 'SSHKEY', passphraseVariable: '', usernameVariable: 'SSHUSERNAME')]) {
-            stage('Pull Repo') {
-                git branch: '${branch}', changelog: false, poll: false, url: 'https://github.com/ikambarov/ansible-melodi.git'
-            }
-            withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-master-ssh-key', keyFileVariable: 'SSHKEY', passphraseVariable: '', usernameVariable: 'SSHUSERNAME')]) {
-                stage("Install Apache"){
-                    sh 'ansible-playbook -i "104.131.119.227," --private-key $SSHKEY main.yml'
-                }
-            }
+        stage('Pull Repo') {
+            git branch: 'master', changelog: false, poll: false, url: 'https://github.com/ikambarov/ansible-melodi.git'
         }
-    }
+        withEnv(['ANSIBLE_HOST_KEY_CHECKING=False']) {
+            stage("Install Apache"){
+                ansiblePlaybook credentialsId: 'jenkins-master-ssh-key', extras: '-e melodi_branch=${branch}', inventory: '${nodeIP},', playbook: 'main.yml'
+                }
+            }  
+        }  
 }
 else {
     error 'Please enter valid IP address'
