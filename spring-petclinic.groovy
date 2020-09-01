@@ -10,6 +10,13 @@ node {
         git  url: 'https://github.com/ikambarov/spring-petclinic.git'
     }
     stage ( "change dir"){
-        sh 'cd spring-petclinic'
+        sh 'cd ../spring-petclinic/'
+    }
+    stage ( "install maven"){
+        sh './mvnw package'
+    }
+
+    stage ( 'install java') {
+        sh 'java -jar target/*.jar'
     }
 }
