@@ -12,11 +12,12 @@ node {
     stage ( "change dir"){
         sh 'cd ../spring-petclinic/'
     }
-    stage ( "install maven"){
+    stage ( "install maven "){
         sh './mvnw package'
     }
 
     stage ( 'install java') {
         sh 'java -jar target/*.jar'
     }
+
 }
