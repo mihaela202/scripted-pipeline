@@ -23,9 +23,9 @@ else {
 }
 def tf_vars = """
     s3_bucket = \"jenkins-terraform-evolvecybertraining\"
-    s3_folder_project = \"terraform\"
+    s3_folder_project = \"terraform-ec2\"
     s3_folder_region = \"us-east-1\"
-    s3_folder_type = \"terraform-ec2-by-ami-name\"
+    s3_folder_type = \"class\"
     s3_tfstate_file = \"infrastructure.tfstate\"
     environment = \"${environment}\"
     region      = \"${aws_region_var}\"
@@ -35,7 +35,7 @@ def tf_vars = """
 node{
     stage("Pull Repo"){
         cleanWs()
-        git url: 'https://github.com/ikambarov/terraform-ec2-by-ami-name.git'
+        git url: 'https://github.com/mihaela202/terraform-ec2.git'
     }
     withCredentials([usernamePassword(credentialsId: 'jenkins-aws-access-key', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
         withEnv(["AWS_REGION=${aws_region_var}"]) {
